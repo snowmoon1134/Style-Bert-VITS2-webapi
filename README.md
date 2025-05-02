@@ -14,10 +14,10 @@ https://github.com/litagin02/Style-Bert-VITS2 に対して、以下のような�
 
 ```
 # build
-docker build -t emotional-text-to-speech .
+docker build -t style-bert-vits2-webapi .
 
 # run
-docker run --rm -it -p 5000:5000 emotional-text-to-speech
+docker run --rm -it -p 5000:5000 style-bert-vits2-webapi
 ...
 (しばらく起動に時間がかかるので待つ)
 ...
