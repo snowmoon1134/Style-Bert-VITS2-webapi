@@ -33,7 +33,7 @@ docker run --rm -it -p 5000:5000 style-bert-vits2-webapi
 ```
 # 利用可能なモデル一覧を取得
 curl -X 'GET' \
-  'http://localhost:8000/models/info' \
+  'http://localhost:5000/models/info' \
   -H 'accept: application/json'
 
 {
@@ -78,8 +78,22 @@ ENCODED_TEXT="%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%82%8F%EF%BC%81%EF%BC%81"
 
 # WebAPI呼び出し
 curl -X 'GET' \
-  "http://localhost:8000/voice?text=${ENCODED_TEXT}&model_name=${MODEL_NAME}&speaker_id=${SPEAKER_ID}&sdp_ratio=0.2&noise=0.6&noisew=0.8&length=1&language=JP&auto_split=true&split_interval=0.5&assist_text_weight=1&style=Neutral&style_weight=1" \
+  "http://localhost:5000/voice?text=${ENCODED_TEXT}&model_name=${MODEL_NAME}&speaker_id=${SPEAKER_ID}&sdp_ratio=0.2&noise=0.6&noisew=0.8&length=1&language=JP&auto_split=true&split_interval=0.5&assist_text_weight=1&style=Neutral&style_weight=1" \
   -H 'accept: audio/wav' --output output.wav
 
 # output.wav に合成された音声が格納される
+```
+
+## Run with NVIDIA GPU
+NVIDIA Container Toolkitは事前導入
+
+```
+docker build -t style-bert-vits2-webapi -f Dockerfile.gpu .
+
+# CUDAがGPUを認識しているか事前チェック
+docker run --rm -it --entrypoint="python" --gpus=all style-bert-vits2-webapi '-c' 'import torch;print(torch.cuda.is_available())'
+# Trueと出ていたら認識している
+
+# サーバ起動
+docker run --rm -it -p 5000:5000 --gpus=all style-bert-vits2-webapi
 ```
